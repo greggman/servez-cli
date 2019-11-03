@@ -1,14 +1,16 @@
 {
   "name": "servez",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple command line server to replace http-server",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/http-server"
   },
   "keywords": [
     "http",
     "https",
-    "server"
+    "server",
+    "cli",
+    "command"
   ],
   "repository": {
     "type": "git",
@@ -23,5 +25,8 @@
   "dependencies": {
     "optionator": "^0.8.2",
     "servez-lib": "^1.0.0"
+  },
+  "bin": {
+    "http-server": "./bin/servez"
   }
 }
