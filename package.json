@@ -24,7 +24,7 @@
   "homepage": "https://github.com/greggman/servez-cli#readme",
   "dependencies": {
     "optionator": "^0.8.2",
-    "servez-lib": "^1.1.0"
+    "servez-lib": "^1.1.1"
   },
   "bin": {
     "servez": "./bin/servez"
