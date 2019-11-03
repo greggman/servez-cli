@@ -1,1 +1,77 @@
 #!/usr/bin/env node
+
+"use strict";
+
+const makeOptions = require('optionator');
+
+const optionSpec = {
+  options: [
+    { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help' },
+    { option: 'port', alias: 'p', type: 'Int',     description: 'port', default: '8080' },
+    { option: 'dirs',             type: 'Boolean', description: 'show directory listing', default: 'true', },
+    { option: 'cors',             type: 'Boolean', description: 'send CORS headers', default: 'true', },
+    { option: 'local',            type: 'Boolean', description: 'local machine only', default: 'false', },
+    { option: 'index',            type: 'Boolean', description: 'serve index.html for directories', default: 'true', },
+    { option: 'gzip',             type: 'Boolean', description: 'serve .gz files if they exist', default: 'false', },
+    { option: 'brotli',           type: 'Boolean', description: 'serve .br files if they exist', default: 'false', },
+    { option: 'robots',           type: 'Boolean', description: 'serve a robots.txt if one does not exist', default: 'true', },
+    { option: 'username',         type: 'String',  description: 'username for basic auth' },
+    { option: 'password',         type: 'String',  description: 'password for basic auth' },
+    { option: 'ssl',  alias: 'S', type: 'Boolean', description: 'enable https', },
+    { option: 'cert', alias: 'C', type: 'String',  description: 'Path to ssl cert file', default: 'cert.pem' },
+    { option: 'key',  alias: 'K', type: 'String',  description: 'Path to ssl key file', default: 'key.pem' },
+  ],
+  prepend: `Usage: servez [options] [path-to-serve]`,
+  helpStyle: {
+    typeSeparator: '=',
+    descriptionSeparator: ' : ',
+    initialIndent: 4,
+  },
+};
+/* eslint-enable object-curly-newline */
+const optionator = makeOptions(optionSpec);
+
+let args;
+try {
+  args = optionator.parse(process.argv);
+} catch (e) {
+  console.error(e);
+  printHelp();
+}
+
+function printHelp() {
+  console.log(optionator.generateHelp());
+  process.exit(1);  // eslint-disable-line
+}
+
+if (args.help) {
+  printHelp();
+}
+
+const fs = require('fs');
+
+const root = args._[0] || process.cwd();
+try {
+  const stat = fs.statSync(root);
+  if (!stat) {
+    console.error(`'${root}' does not exist`);
+    process.exit(1);  // eslint-disable-line
+  }
+  if (!stat.isDirectory()) {
+    console.error(`'${root}' is not a directory`);
+    process.exit(1);  // eslint-disable-line
+  }
+} catch (e) {
+  console.log(e.stack);
+  console.error(`'${root}' does not exist.`);
+  process.exit(1);  // eslint-disable-line
+}
+
+const Servez = require('servez-lib');
+const server = new Servez(Object.assign({
+  root,
+  logger: {
+    log: console.log.bind(console),
+    error: console.error.bind(console),
+  },
+}, args));

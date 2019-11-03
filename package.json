@@ -2,13 +2,26 @@
   "name": "servez",
   "version": "1.0.0",
   "description": "A simple command line server to replace http-server",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "http"
+    "http",
+    "https",
+    "server"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greggman/servez-cli.git"
+  },
   "author": "Gregg Tavares",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greggman/servez-cli/issues"
+  },
+  "homepage": "https://github.com/greggman/servez-cli#readme",
+  "dependencies": {
+    "optionator": "^0.8.2",
+    "servez-lib": "^1.0.0"
+  }
 }
