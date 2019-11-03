@@ -1,5 +1,6 @@
 [![npm](https://img.shields.io/npm/v/servez.svg?style=flat-square)](https://www.npmjs.com/package/servez)
-[![license](https://img.shields.io/github/license/greggman/servez.svg?style=flat-square)](https://github.com/greggamn/servez-cli)
+![GitHub](https://img.shields.io/github/license/greggman/servez-cli?style=flat-square)
+
 
 ![](https://github.com/greggman/servez/raw/master/icon.png)
 
