@@ -1,0 +1,14 @@
+{
+  "name": "servez",
+  "version": "1.0.0",
+  "description": "A simple command line server to replace http-server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "http"
+  ],
+  "author": "Gregg Tavares",
+  "license": "MIT"
+}
