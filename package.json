@@ -1,9 +1,9 @@
 {
   "name": "servez",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple command line server to replace http-server",
   "scripts": {
-    "start": "node ./bin/http-server"
+    "start": "node ./bin/servez"
   },
   "keywords": [
     "http",
