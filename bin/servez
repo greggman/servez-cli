@@ -75,3 +75,6 @@ const server = new Servez(Object.assign({
     error: console.error.bind(console),
   },
 }, args));
+server.on('start', () => {
+  console.log('press CTRL-C to stop the server.');
+})
