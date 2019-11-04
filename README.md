@@ -1,5 +1,6 @@
 [![npm](https://img.shields.io/npm/v/servez.svg?style=flat-square)](https://www.npmjs.com/package/servez)
 ![GitHub](https://img.shields.io/github/license/greggman/servez-cli?style=flat-square)
+[![Build Status](https://travis-ci.org/greggman/servez-lib.svg?branch=master)](https://travis-ci.org/greggman/servez-lib)
 
 
 ![](https://github.com/greggman/servez/raw/master/icon.png)
