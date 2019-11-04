@@ -8,6 +8,7 @@ const optionSpec = {
   options: [
     { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help' },
     { option: 'port', alias: 'p', type: 'Int',     description: 'port', default: '8080' },
+    { option: 'scan',             type: 'Boolean', description: 'scan for open port', default: 'true', },
     { option: 'dirs',             type: 'Boolean', description: 'show directory listing', default: 'true', },
     { option: 'cors',             type: 'Boolean', description: 'send CORS headers', default: 'true', },
     { option: 'local',            type: 'Boolean', description: 'local machine only', default: 'false', },
