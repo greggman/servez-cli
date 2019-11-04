@@ -16,6 +16,7 @@ const optionSpec = {
     { option: 'gzip',             type: 'Boolean', description: 'serve .gz files if they exist', default: 'false', },
     { option: 'brotli',           type: 'Boolean', description: 'serve .br files if they exist', default: 'false', },
     { option: 'robots',           type: 'Boolean', description: 'serve a robots.txt if one does not exist', default: 'true', },
+    { option: 'hidden',           type: 'Boolean', description: 'show hidden dotfiles', default: 'false', },
     { option: 'username',         type: 'String',  description: 'username for basic auth' },
     { option: 'password',         type: 'String',  description: 'password for basic auth' },
     { option: 'ssl',  alias: 'S', type: 'Boolean', description: 'enable https', },
