@@ -33,32 +33,40 @@ Using `npx` you can run servez without installing it first:
 
 ## Available Options:
 
-`-h` or `--help` for help
+* `-h` or `--help` for help
 
-`-p` or `--port` Port to use (defaults to 8080) note if port is in use will use next available port
+* `-p` or `--port` Port to use (defaults to 8080) note if port is in use will use next available port
 
-`--local` make serve only accessible from this machine. The default
+* `--version` prints the version number
+
+* `--scan` scan forward until an open port is found. (defaults to `true`. `--no-scan` to disable)
+
+* `--dirs` Show folder listings (defaults to `true`, `--no-dirs` to disable)
+
+* `--cors` Include CORS headers (defaults to `true`, `--no-cors` to disable)
+
+* `--local` make serve only accessible from this machine. The default
 is to serve publicly. (0.0.0.0 vs 127.0.0.1)
 
-`--dirs` Show folder listings (defaults to `true`, `--no-dirs` to disable)
+* `--index` Display index.html for folders if it exists (defaults to `true`, `--no-index` to disable)
 
-`--cors` Include CORS headers (defaults to `true`, `--no-cors` to disable)
+* `--gzip` serve `somefile.gz` in place of `somefile`
 
-`--index` Display index.html for folders if it exists (defaults to `true`, `--no-index` to disable)
+* `--brotli` serve `somefile.br` in place of `somefile`
 
-`--gzip` serve `somefile.gz` in place of `somefile`
+* `--robots` Provide a /robots.txt if one does not exist. (defaults to `true`. `--no-robots` to disable)
 
-`--brotli` serve `somefile.br` in place of `somefile`.
+* `--hidden` Show files that start with `.`
 
-`--username` Username for basic authentication
+* `--username` Username for basic authentication
 
-`--password` Password for basic authentication
+* `--password` Password for basic authentication
 
-`-S` or `--ssl` Use https.
+* `-S` or `--ssl` Use https
 
-`-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
+* `-C` or `--cert` Path to ssl cert file (default: `cert.pem`)
 
-`-K` or `--key` Path to ssl key file (default: `key.pem`).
+* `-K` or `--key` Path to ssl key file (default: `key.pem`)
 
-`--robots` Provide a /robots.txt if one does not exist. (defaults to `true`. `--no-robots` to disable)
+
 
