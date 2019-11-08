@@ -58,8 +58,9 @@ if (args.version) {
 }
 
 const fs = require('fs');
+const path = require('path');
 
-const root = args._[0] || process.cwd();
+const root = path.resolve(args._[0] || process.cwd());
 try {
   const stat = fs.statSync(root);
   if (!stat) {
