@@ -63,17 +63,16 @@ const path = require('path');
 const root = path.resolve(args._[0] || process.cwd());
 try {
   const stat = fs.statSync(root);
-  if (!stat) {
-    console.error(`'${root}' does not exist`);
-    process.exit(1);  // eslint-disable-line
-  }
   if (!stat.isDirectory()) {
     console.error(`'${root}' is not a directory`);
     process.exit(1);  // eslint-disable-line
   }
 } catch (e) {
-  console.log(e.stack);
-  console.error(`'${root}' does not exist.`);
+  if (e.code === 'ENOENT') {
+    console.error(`'${root}' does not exist.`);
+  } else {
+    console.error(e, e.stack);
+  }
   process.exit(1);  // eslint-disable-line
 }
 
