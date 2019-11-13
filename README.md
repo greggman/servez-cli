@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/greggman/servez-lib.svg?branch=master)](https://travis-ci.org/greggman/servez-lib)
 
 
-![](https://github.com/greggman/servez/raw/master/servez.jpg)
+![](https://github.com/greggman/servez-cli/raw/master/servez.jpg)
 
 # servez: a simple command-line http server
 
