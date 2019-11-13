@@ -4,6 +4,7 @@
 
 
 ![](https://github.com/greggman/servez-cli/raw/master/servez.jpg)
+<sup>Illustration by [Nomi](http://www.thenomi.com), [[@the_nomi](https://twitter.com/the_nomi), [mail](mailto:the_nomi@jizai.org)]</sup>
 
 # servez: a simple command-line http server
 
