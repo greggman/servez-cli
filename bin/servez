@@ -76,7 +76,7 @@ try {
   process.exit(1);  // eslint-disable-line
 }
 
-const colorSupport = require('color-support') || {}
+const colorSupport = require('color-support') || {};
 const c = require('ansi-colors');
 c.enabled = colorSupport.hasBasic;
 const Servez = require('servez-lib');
@@ -92,7 +92,7 @@ const server = new Servez(Object.assign({
 }, args));
 server.on('start', () => {
   console.log('press CTRL-C to stop the server.');
-})
+});
 
 process.on('SIGINT', function () {
   console.log(c.red('servez stopped.'));
