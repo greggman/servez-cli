@@ -63,11 +63,11 @@ is to serve publicly. (0.0.0.0 vs 127.0.0.1)
 
 * `--password` Password for basic authentication
 
-* `-S` or `--ssl` Use https
+* `-S` or `--ssl` Use https (will use a fake cert if not specified)
 
-* `-C` or `--cert` Path to ssl cert file (default: `cert.pem`)
+* `-C` or `--cert` Path to ssl cert file
 
-* `-K` or `--key` Path to ssl key file (default: `key.pem`)
+* `-K` or `--key` Path to ssl key file
 
 
 
