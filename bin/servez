@@ -20,9 +20,9 @@ const optionSpec = {
     { option: 'hidden',           type: 'Boolean', description: 'show hidden dotfiles', default: 'false', },
     { option: 'username',         type: 'String',  description: 'username for basic auth' },
     { option: 'password',         type: 'String',  description: 'password for basic auth' },
-    { option: 'ssl',  alias: 'S', type: 'Boolean', description: 'enable https', },
-    { option: 'cert', alias: 'C', type: 'String',  description: 'Path to ssl cert file', default: 'cert.pem' },
-    { option: 'key',  alias: 'K', type: 'String',  description: 'Path to ssl key file', default: 'key.pem' },
+    { option: 'ssl',  alias: 'S', type: 'Boolean', description: 'enable https (will use fake cert if not specified)', },
+    { option: 'cert', alias: 'C', type: 'String',  description: 'Path to ssl cert file', },
+    { option: 'key',  alias: 'K', type: 'String',  description: 'Path to ssl key file', },
   ],
   prepend: `Usage: servez [options] [path-to-serve]`,
   helpStyle: {
