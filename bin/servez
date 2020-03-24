@@ -76,12 +76,15 @@ try {
   process.exit(1);  // eslint-disable-line
 }
 
+const dataDir = require('../src/appdata')('servez-cli');
+
 const colorSupport = require('color-support') || {};
 const c = require('ansi-colors');
 c.enabled = colorSupport.hasBasic;
 const Servez = require('servez-lib');
 const server = new Servez(Object.assign({
   root,
+  dataDir,
   logger: {
     log: console.log.bind(console),
     error: (...args) => {
