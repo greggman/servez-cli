@@ -78,28 +78,38 @@ try {
 
 process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
 
-const dataDir = require('../src/appdata')('servez-cli');
-
 const colorSupport = require('color-support') || {};
 const c = require('ansi-colors');
 c.enabled = colorSupport.hasBasic;
-const Servez = require('servez-lib');
-const server = new Servez(Object.assign({
-  root,
-  dataDir,
-  logger: {
-    log: console.log.bind(console),
-    error: (...args) => {
-      console.error(c.red([...args].join(' ')));
-    },
-    c,
+
+const commands = {
+  log(data) {
+    console.log(...data);
   },
-}, args));
-server.on('start', () => {
-  console.log('press CTRL-C to stop the server.');
+  error(data) {
+    console.error(c.red([...data].join(' ')));
+  },
+};
+
+const {Worker} = require('worker_threads');
+const worker = new Worker(path.join(__dirname, '..', 'src', 'server-worker.js'), {
+  workerData: {
+    root,
+    args,
+    useColors: colorSupport.hasBasic,
+  },
+});
+worker.on('message', (msg) => {
+  const cmd = msg.cmd;
+  const fn = commands[cmd];
+  if (!fn) {
+    throw new Error(`unknown cmd: ${cmd}`);
+  }
+  fn(msg.data);
 });
 
 process.on('SIGINT', function () {
   console.log(c.red('servez stopped.'));
   process.exit(0);
 });
+
