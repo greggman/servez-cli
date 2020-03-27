@@ -76,6 +76,8 @@ try {
   process.exit(1);  // eslint-disable-line
 }
 
+process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
+
 const dataDir = require('../src/appdata')('servez-cli');
 
 const colorSupport = require('color-support') || {};
