@@ -11,6 +11,7 @@ const optionSpec = {
     { option: 'version',          type: 'Boolean', description: 'print version' },
     { option: 'scan',             type: 'Boolean', description: 'scan for open port', default: 'true', },
     { option: 'dirs',             type: 'Boolean', description: 'show directory listing', default: 'true', },
+    { option: 'dirsnginx',        type: 'Boolean', description: 'directory listing in nginx style', default: 'false', },
     { option: 'cors',             type: 'Boolean', description: 'send CORS headers', default: 'true', },
     { option: 'local',            type: 'Boolean', description: 'local machine only', default: 'false', },
     { option: 'index',            type: 'Boolean', description: 'serve index.html for directories', default: 'true', },
