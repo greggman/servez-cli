@@ -3,6 +3,21 @@
 "use strict";
 
 const makeOptions = require('optionator');
+const colorSupport = require('color-support') || {};
+const c = require('ansi-colors');
+c.enabled = colorSupport.hasBasic;
+
+const log = {
+  info(...args) {
+    console.log(...args);
+  },
+  warn(...args) {
+    console.warn(c.yellow([...args].join(' ')));
+  },
+  error(...args) {
+    console.error(c.red([args].join(' ')));
+  },
+};
 
 const optionSpec = {
   options: [
@@ -38,12 +53,12 @@ let args;
 try {
   args = optionator.parse(process.argv);
 } catch (e) {
-  console.error(e);
+  log.error(e);
   printHelp();
 }
 
 function printHelp() {
-  console.log(optionator.generateHelp());
+  log.info(optionator.generateHelp());
   process.exit(1);  // eslint-disable-line
 }
 
@@ -53,7 +68,7 @@ if (args.help) {
 
 if (args.version) {
   const pkg = require('../package.json');
-  console.log(pkg.version);
+  log.info(pkg.version);
   process.exit(0);
 }
 
@@ -64,23 +79,19 @@ const root = path.resolve(args._[0] || process.cwd());
 try {
   const stat = fs.statSync(root);
   if (!stat.isDirectory()) {
-    console.error(`'${root}' is not a directory`);
+    log.error(`'${root}' is not a directory`);
     process.exit(1);  // eslint-disable-line
   }
 } catch (e) {
   if (e.code === 'ENOENT') {
-    console.error(`'${root}' does not exist.`);
+    log.warn(c.bold.yellow(`!!!!!!!!!!!!!!!\n\n WARNING: '${root}' does not exist!\n\n!!!!!!!!!!!!!!!`));
   } else {
-    console.error(e, e.stack);
+    log.error(e, e.stack);
+    process.exit(1);  // eslint-disable-line
   }
-  process.exit(1);  // eslint-disable-line
 }
 
 process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
-
-const colorSupport = require('color-support') || {};
-const c = require('ansi-colors');
-c.enabled = colorSupport.hasBasic;
 
 const commands = {
   log(data) {
