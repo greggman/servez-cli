@@ -92,6 +92,7 @@ try {
 }
 
 process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
+process.title = `servez ${root.split(/\\|\//g).slice(-3).join(path.sep)}`;
 
 const commands = {
   log(data) {
