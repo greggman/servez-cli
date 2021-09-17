@@ -30,6 +30,7 @@ const optionSpec = {
     { option: 'local',            type: 'Boolean',  description: 'local machine only', default: 'false', },
     { option: 'index',            type: 'Boolean',  description: 'serve index.html for directories', default: 'true', },
     { option: 'extensions',       type: '[String]', description: 'extensions to try if path does not exist', default: '["html"]', },
+    { option: 'unity-hack',       type: 'Boolean',  description: 'ignore .gz and .br when computing content type', default: 'true', },
     { option: 'gzip',             type: 'Boolean',  description: 'serve .gz files if they exist', default: 'false', },
     { option: 'brotli',           type: 'Boolean',  description: 'serve .br files if they exist', default: 'false', },
     { option: 'robots',           type: 'Boolean',  description: 'serve a robots.txt if one does not exist', default: 'true', },
