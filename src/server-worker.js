@@ -19,8 +19,8 @@ function sendCmd(cmd, data) {
 
 c.enabled = useColors;
 const logger = {
-  log: (...args) => sendCmd('log', [...args]),
-  error: (...args) => sendCmd('error', [...args]),
+  log: (...args) => sendCmd('log', args),
+  error: (...args) => sendCmd('error', args),
   c,
 };
 
@@ -29,8 +29,7 @@ const server = new Servez(Object.assign({
   dataDir,
   logger,
 }, args));
-server.on('start', () => {
-  logger.log('press CTRL-C to stop the server.');
-});
+server.on('host', (...args) => sendCmd('host', args));
+server.on('start', (...args) => sendCmd('start', args));
 
 

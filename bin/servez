@@ -19,6 +19,20 @@ const log = {
   },
 };
 
+function genQRCode(s) {
+  const qr = QrCode.encodeText(s, Ecc.MEDIUM);
+
+  const lines = [];
+  for (let y = 0; y < qr.size; y++) {
+    const line = [];
+    for (let x = 0; x < qr.size; x++) {
+      line.push(c[qr.getModule(x, y) ? 'bgBlack' : 'bgWhite'](' '));
+    }
+    lines.push(line.join(''));
+  }
+  return lines.join('\n');
+}
+
 const optionSpec = {
   options: [
     { option: 'help', alias: 'h', type: 'Boolean',  description: 'displays help' },
@@ -26,6 +40,7 @@ const optionSpec = {
     { option: 'version',          type: 'Boolean',  description: 'print version' },
     { option: 'scan',             type: 'Boolean',  description: 'scan for open port', default: 'true', },
     { option: 'dirs',             type: 'Boolean',  description: 'show directory listing', default: 'true', },
+    { option: 'qr',               type: 'Boolean',  description: 'print QR Code for root url' },
     { option: 'cors',             type: 'Boolean',  description: 'send CORS headers', default: 'true', },
     { option: 'local',            type: 'Boolean',  description: 'local machine only', default: 'false', },
     { option: 'index',            type: 'Boolean',  description: 'serve index.html for directories', default: 'true', },
@@ -76,6 +91,8 @@ if (args.version) {
 
 const fs = require('fs');
 const path = require('path');
+const {QrCode, Ecc} = require('../lib/qrcodegen');
+const hosts = [];
 
 const root = path.resolve(args._[0] || process.cwd());
 try {
@@ -97,11 +114,29 @@ process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?
 process.title = `servez ${root.split(/\\|\//g).slice(-3).join(path.sep)}`;
 
 const commands = {
-  log(data) {
-    console.log(...data);
+  log(args) {
+    console.log(...args);
   },
-  error(data) {
-    console.error(c.red([...data].join(' ')));
+  error(args) {
+    console.error(c.red(args.join(' ')));
+  },
+  host(args) {
+    const localRE = /\D0\.0\.0\.0.\D|\D127\.0\.0\.|\Wlocalhost\W/
+    const [data] = args;
+    const {root} = data;
+    if (!localRE.test(root)) {
+      hosts.push(root);
+    }
+  },
+  start(data) {
+    if (args.qr) {
+      for (const host of hosts) {
+        log.info(`--------------\nQR code for: ${host}`);
+        log.info(genQRCode(host));
+        log.info('');
+      }
+    }
+    log.info('press CTRL-C to stop the server.');
   },
 };
 
