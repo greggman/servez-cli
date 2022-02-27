@@ -44,6 +44,8 @@ Using `npx` you can run servez without installing it first:
 
 * `--dirs` Show folder listings (defaults to `true`, `--no-dirs` to disable)
 
+* `--qr` Show a QR code for the root url of the server. This might help for using servez with a phone.
+
 * `--cors` Include CORS headers (defaults to `true`, `--no-cors` to disable)
 
 * `--local` make serve only accessible from this machine. The default
