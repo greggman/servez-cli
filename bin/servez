@@ -20,41 +20,19 @@ const log = {
 };
 
 function genQRCode(s) {
-  const blockChars = [
-      ' ',   // 0
-      '▘',   // 1
-      '▝',   // 2
-      '▀',   // 3
-      '▖',   // 4
-      '▌',   // 5
-      '▞',   // 6
-      '▛',   // 7
-      '▗',   // 8
-      '▚',   // 9
-      '▐',   // 10
-      '▜',   // 11
-      '▄',   // 12
-      '▙',   // 13
-      '▟',   // 14
-      '█',   // 15
-  ];
 
   const qr = QrCode.encodeText(s, Ecc.MEDIUM);
   const size = ((qr.size + 1) / 2 | 0) * 2 + 2;
 
   const lines = [];
-  for (let y = -2; y < size; y += 2) {
+  for (let y = -2; y < size; ++y) {
     const line = [];
-    for (let x = -2; x < size; x += 1) {
-      const code = (qr.getModule(x + 0, y + 0) ? 1 : 0) |
-                   (qr.getModule(x + 0, y + 0) ? 2 : 0) |
-                   (qr.getModule(x + 0, y + 1) ? 4 : 0) |
-                   (qr.getModule(x + 0, y + 1) ? 8 : 0) ;
-      line.push(blockChars[code]);
+    for (let x = -2; x < size; ++x) {
+      line.push(c[qr.getModule(x, y) ? 'bgBlack' : 'bgWhite']('  '));
     }
     lines.push(line.join(''));
   }
-  return c.bgWhite(c.black(lines.join('\n')));
+  return lines.join('\n');
 }
 
 const optionSpec = {
