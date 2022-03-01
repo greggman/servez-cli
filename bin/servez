@@ -22,7 +22,7 @@ const log = {
 function genQRCode(s) {
 
   const qr = QrCode.encodeText(s, Ecc.MEDIUM);
-  const size = ((qr.size + 1) / 2 | 0) * 2 + 2;
+  const size = qr.size + 2;
 
   const lines = [];
   for (let y = -2; y < size; ++y) {
