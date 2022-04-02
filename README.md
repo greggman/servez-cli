@@ -49,13 +49,19 @@ Using `npx` you can run servez without installing it first:
 * `--cors` Include CORS headers (defaults to `true`, `--no-cors` to disable)
 
 * `--local` make serve only accessible from this machine. The default
-is to serve publicly. (0.0.0.0 vs 127.0.0.1)
+  is to serve publicly. (0.0.0.0 vs 127.0.0.1)
 
 * `--index` Display index.html for folders if it exists (defaults to `true`, `--no-index` to disable)
 
 * `--gzip` serve `somefile.gz` in place of `somefile`
 
 * `--brotli` serve `somefile.br` in place of `somefile`
+
+* `--unity-hack` ignore .gz and .br when computing content type. (defaults to `true`, `--no-unity-hack` to disable)
+
+* `--shared-array-buffers` include headers 'Cross-Origin-Opener-Policy': 'same-origin' and 'Cross-Origin-Embedder-Policy': 'require-corp'.
+
+* `--header=<name>:<value>` extra headers to include eg `--header=Content-Language:de-DE'`
 
 * `--robots` Provide a /robots.txt if one does not exist. (defaults to `true`. `--no-robots` to disable)
 
