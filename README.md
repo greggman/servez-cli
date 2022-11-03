@@ -12,6 +12,10 @@
 
 # Installing globally:
 
+!!!Note!!!: you need to install [node.js](https://nodejs.org).
+I recommend installing node via [nvm](https://github.com/nvm-sh/nvm)(mac/linux)
+or [nvm-windows](https://github.com/coreybutler/nvm-windows)(windows)
+
 Installation via `npm`:
 
      npm install servez -g
