@@ -1,6 +1,6 @@
 {
   "name": "servez",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "description": "A simple command line server to replace http-server",
   "scripts": {
     "start": "node ./bin/servez"
