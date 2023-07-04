@@ -2,7 +2,8 @@
 
 "use strict";
 
-const makeOptions = require('optionator');
+const { program } = require('commander');
+const pkg = require('../package.json');
 const colorSupport = require('color-support') || {};
 const c = require('ansi-colors');
 c.enabled = colorSupport.hasBasic;
@@ -19,153 +20,138 @@ const log = {
   },
 };
 
-function genQRCode(s) {
-
-  const qr = QrCode.encodeText(s, Ecc.MEDIUM);
-  const size = qr.size + 2;
-
-  const lines = [];
-  for (let y = -2; y < size; ++y) {
-    const line = [];
-    for (let x = -2; x < size; ++x) {
-      line.push(c[qr.getModule(x, y) ? 'bgBlack' : 'bgWhite']('  '));
-    }
-    lines.push(line.join(''));
+const fixedParseInt = v => parseInt(v);
+const parseHeader = (v, oldV) => {
+  console.log('v:', `'${v}'`);
+  console.log('oldV:', `'${JSON.stringify(oldV)}'`);
+  const m = /^(.*?):(.*?)$/.exec(v);
+  if (!m) {
+    throw new Error('bad header argument: format is --header=<header>:<value>');
   }
-  return lines.join('\n');
-}
-
-const optionSpec = {
-  options: [
-    { option: 'help', alias: 'h',     type: 'Boolean',  description: 'displays help' },
-    { option: 'port', alias: 'p',     type: 'Int',      description: 'port', default: '8080' },
-    { option: 'version',              type: 'Boolean',  description: 'print version' },
-    { option: 'scan',                 type: 'Boolean',  description: 'scan for open port', default: 'true', },
-    { option: 'qr',               type: 'Boolean',  description: 'print QR Code for root url' },
-    { option: 'dirs',                 type: 'Boolean',  description: 'show directory listing', default: 'true', },
-    { option: 'cors',                 type: 'Boolean',  description: 'send CORS headers', default: 'true', },
-    { option: 'local',                type: 'Boolean',  description: 'local machine only', default: 'false', },
-    { option: 'index',                type: 'Boolean',  description: 'serve index.html for directories', default: 'true', },
-    { option: 'extensions',           type: '[String]', description: 'extensions to try if path does not exist', default: '["html"]', },
-    { option: 'unity-hack',           type: 'Boolean',  description: 'ignore .gz and .br when computing content type', default: 'true', },
-    { option: 'shared-array-buffers', type: 'Boolean',  description: "include headers 'Cross-Origin-Opener-Policy': 'same-origin' and 'Cross-Origin-Embedder-Policy': 'require-corp'", default: 'false', },
-    { option: 'header',               type: 'Object',   description: 'extra headers to include eg --header=Content-Language:de-DE', mergeRepeatedObjects: true},
-    { option: 'gzip',                 type: 'Boolean',  description: 'serve .gz files if they exist', default: 'false', },
-    { option: 'brotli',               type: 'Boolean',  description: 'serve .br files if they exist', default: 'false', },
-    { option: 'robots',               type: 'Boolean',  description: 'serve a robots.txt if one does not exist', default: 'true', },
-    { option: 'hidden',               type: 'Boolean',  description: 'show hidden dotfiles', default: 'false', },
-    { option: 'username',             type: 'String',   description: 'username for basic auth' },
-    { option: 'password',             type: 'String',   description: 'password for basic auth' },
-    { option: 'ssl',  alias: 'S',     type: 'Boolean',  description: 'enable https (will use fake cert if not specified)', },
-    { option: 'cert', alias: 'C',     type: 'String',   description: 'Path to ssl cert file', },
-    { option: 'key',  alias: 'K',     type: 'String',   description: 'Path to ssl key file', },
-  ],
-  prepend: `Usage: servez [options] [path-to-serve]`,
-  helpStyle: {
-    typeSeparator: '=',
-    descriptionSeparator: ' : ',
-    initialIndent: 4,
-  },
+  const newV = {...oldV};
+  newV[m[1]] = m[2];
+  return newV;
 };
-/* eslint-enable object-curly-newline */
-const optionator = makeOptions(optionSpec);
 
-let args;
-try {
-  args = optionator.parse(process.argv);
-} catch (e) {
-  log.error(e);
-  printHelp();
-}
+program
+    .name('servez')
+    .version(pkg.version)
+    .usage('[options] [path-to-serve]')
+    .argument('[path-to-serve]', 'path to serve')
+    .option('-p, --port <port>',           'port', fixedParseInt, 8080)
+    .option('--no-scan',                   'do not scan for open port')
+    .option('--qr',                        'print QR Code for root url')
+    .option('--no-dirs',                   'do not show directory listing')
+    .option('--no-cors',                   'do not send CORS headers')
+    .option('--local',                     'local machine only')
+    .option('--no-index',                  'do not serve index.html for directories')
+    .option('--extensions <extensions...>','extensions to try if path does not exist', ['html'])
+    .option('--no-unity-hack',             'do not ignore .gz and .br when computing content type')
+    .option('--shared-array-buffers',      "include headers 'Cross-Origin-Opener-Policy': 'same-origin' and 'Cross-Origin-Embedder-Policy': 'require-corp'", false)
+    .option('--header <header>',           'extra headers to include eg --header=Content-Language:de-DE', parseHeader, {})
+    .option('--gzip',                      'serve .gz files if they exist', false)
+    .option('--brotli',                    'serve .br files if they exist', false)
+    .option('--no-robots',                 'do not serve a robots.txt if one does not exist', true)
+    .option('--hidden',                    'show hidden dotfiles', false)
+    .option('--username <username>',       'username for basic auth')
+    .option('--password <password>',       'password for basic auth')
+    .option('-S, --ssl',                   'enable https (will use fake cert if not specified)', false)
+    .option('-C, --cert <cert>',           'Path to ssl cert file')
+    .option('-K, --key <key>',             'Path to ssl key file')
+    .action(main);
 
-function printHelp() {
-  log.info(optionator.generateHelp());
-  process.exit(1);  // eslint-disable-line
-}
+program.showHelpAfterError('(add --help for additional information)');
+program.parse();
 
-if (args.help) {
-  printHelp();
-}
+function main(pathToServe, args) {
+  args.headers = args.header;
+  delete args.header;
 
-if (args.version) {
-  const pkg = require('../package.json');
-  log.info(pkg.version);
-  process.exit(0);
-}
+  const fs = require('fs');
+  const path = require('path');
+  const {QrCode, Ecc} = require('../lib/qrcodegen');
+  const hosts = [];
 
-args.headers = args.header;
-delete args.header;
+  function genQRCode(s) {
+    const qr = QrCode.encodeText(s, Ecc.MEDIUM);
+    const size = qr.size + 2;
 
-const fs = require('fs');
-const path = require('path');
-const {QrCode, Ecc} = require('../lib/qrcodegen');
-const hosts = [];
-
-const root = path.resolve(args._[0] || process.cwd());
-try {
-  const stat = fs.statSync(root);
-  if (!stat.isDirectory()) {
-    log.error(`'${root}' is not a directory`);
-    process.exit(1);  // eslint-disable-line
-  }
-} catch (e) {
-  if (e.code === 'ENOENT') {
-    log.warn(c.bold.yellow(`!!!!!!!!!!!!!!!\n\n WARNING: '${root}' does not exist!\n\n!!!!!!!!!!!!!!!`));
-  } else {
-    log.error(e, e.stack);
-    process.exit(1);  // eslint-disable-line
-  }
-}
-
-process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
-process.title = `servez ${root.split(/\\|\//g).slice(-3).join(path.sep)}`;
-
-const commands = {
-  log(args) {
-    console.log(...args);
-  },
-  error(args) {
-    console.error(c.red(args.join(' ')));
-  },
-  host(args) {
-    const localRE = /\D0\.0\.0\.0.\D|\D127\.0\.0\.|\Wlocalhost\W/
-    const [data] = args;
-    const {root} = data;
-    if (!localRE.test(root)) {
-      hosts.push(root);
-    }
-  },
-  start(data) {
-    if (args.qr) {
-      for (const host of hosts) {
-        log.info(`--------------\nQR code for: ${host}`);
-        log.info(genQRCode(host));
-        log.info('');
+    const lines = [];
+    for (let y = -2; y < size; ++y) {
+      const line = [];
+      for (let x = -2; x < size; ++x) {
+        line.push(c[qr.getModule(x, y) ? 'bgBlack' : 'bgWhite']('  '));
       }
+      lines.push(line.join(''));
     }
-    log.info('press CTRL-C to stop the server.');
-  },
-};
-
-const {Worker} = require('worker_threads');
-const worker = new Worker(path.join(__dirname, '..', 'src', 'server-worker.js'), {
-  workerData: {
-    root,
-    args,
-    useColors: colorSupport.hasBasic,
-  },
-});
-worker.on('message', (msg) => {
-  const cmd = msg.cmd;
-  const fn = commands[cmd];
-  if (!fn) {
-    throw new Error(`unknown cmd: ${cmd}`);
+    return lines.join('\n');
   }
-  fn(msg.data);
-});
 
-process.on('SIGINT', function () {
-  console.log(c.red('servez stopped.'));
-  process.exit(0);
-});
+  const root = path.resolve(pathToServe || process.cwd());
+  try {
+    const stat = fs.statSync(root);
+    if (!stat.isDirectory()) {
+      log.error(`'${root}' is not a directory`);
+      process.exit(1);  // eslint-disable-line
+    }
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      log.warn(c.bold.yellow(`!!!!!!!!!!!!!!!\n\n WARNING: '${root}' does not exist!\n\n!!!!!!!!!!!!!!!`));
+    } else {
+      log.error(e, e.stack);
+      process.exit(1);  // eslint-disable-line
+    }
+  }
 
+  process.stdin.destroy(); // this allows control-c to not print "Terminate Batch?"
+  process.title = `servez ${root.split(/\\|\//g).slice(-3).join(path.sep)}`;
+
+  const commands = {
+    log(args) {
+      console.log(...args);
+    },
+    error(args) {
+      console.error(c.red(args.join(' ')));
+    },
+    host(args) {
+      const localRE = /\D0\.0\.0\.0.\D|\D127\.0\.0\.|\Wlocalhost\W/
+      const [data] = args;
+      const {root} = data;
+      if (!localRE.test(root)) {
+        hosts.push(root);
+      }
+    },
+    start(data) {
+      if (args.qr) {
+        for (const host of hosts) {
+          log.info(`--------------\nQR code for: ${host}`);
+          log.info(genQRCode(host));
+          log.info('');
+        }
+      }
+      log.info('press CTRL-C to stop the server.');
+    },
+  };
+
+  const {Worker} = require('worker_threads');
+  const worker = new Worker(path.join(__dirname, '..', 'src', 'server-worker.js'), {
+    workerData: {
+      root,
+      args,
+      useColors: colorSupport.hasBasic,
+    },
+  });
+  worker.on('message', (msg) => {
+    const cmd = msg.cmd;
+    const fn = commands[cmd];
+    if (!fn) {
+      throw new Error(`unknown cmd: ${cmd}`);
+    }
+    fn(msg.data);
+  });
+
+  process.on('SIGINT', function () {
+    console.log(c.red('servez stopped.'));
+    process.exit(0);
+  });
+}
