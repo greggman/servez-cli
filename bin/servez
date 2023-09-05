@@ -39,6 +39,7 @@ program
     .usage('[options] [path-to-serve]')
     .argument('[path-to-serve]', 'path to serve')
     .option('-p, --port <port>',           'port', fixedParseInt, 8080)
+    .option('-q, --quiet',                 'do not show requests and missing file messages')
     .option('--no-scan',                   'do not scan for open port')
     .option('--qr',                        'print QR Code for root url')
     .option('--no-dirs',                   'do not show directory listing')
@@ -129,7 +130,9 @@ function main(pathToServe, args) {
           log.info('');
         }
       }
-      log.info('press CTRL-C to stop the server.');
+      if (args.verbose === undefined || args.verbose >= 1) {
+        log.info('press CTRL-C to stop the server.');
+      }
     },
   };
 

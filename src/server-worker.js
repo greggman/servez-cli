@@ -17,10 +17,20 @@ function sendCmd(cmd, data) {
   });
 }
 
+console.log(JSON.stringify(args, null, 2));
+
 c.enabled = useColors;
 const logger = {
   log: (...args) => sendCmd('log', args),
   error: (...args) => sendCmd('error', args),
+  filter: (msgType) => {
+    switch (msgType) {
+      case Servez.MsgType.Info:
+        return args.quiet ? false : true;
+      default:
+        return true;
+    }
+  },
   c,
 };
 
