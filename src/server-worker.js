@@ -17,8 +17,6 @@ function sendCmd(cmd, data) {
   });
 }
 
-console.log(JSON.stringify(args, null, 2));
-
 c.enabled = useColors;
 const logger = {
   log: (...args) => sendCmd('log', args),
